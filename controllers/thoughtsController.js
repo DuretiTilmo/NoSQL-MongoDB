@@ -61,28 +61,37 @@ module.exports = {
 },
 // create a new reaction
 createReaction(req, res) {
-    Reaction.create(req.body)
-    .then((reaction) => res.json(reaction))
+    Thought.findOneAndUpdate(
+      { _id: req.params.reactionId },
+      { $addToSet: { reactions: req.body } },
+      { runValidators: true, new: true }
+    )
+    .then((thought) => 
+    !thought
+    ? res.status(404).json({ message: 'No thought with that ID'})
+    : res.json(thought)
+    )
     .catch((err) => {
         console.log(err);
-        return res.status(500).json(err);
+        res.status(500).json(err);
     });
  },
 // delete a reaction by its id
 deleteReaction(req, res) {
-    Reaction.findOneAndDelete({ _id: req.params.reactionId })
-    .then((reaction) =>
-    !reaction
-    ? res.status(404).json({ message: 'No reaction found with that ID'})
-    : Thought.findOneAndUpdate(
-        { reactions: req.params.reactionId },
-        { $pull: { reactions: req.params.reactionId }},
-        { new: true}
-        )
+    Thought.findOneAndUpdate(
+      { _id: req.params.reactionId },
+      { $pull: { reactions: { reactionId: req.params.reactionId} } },
+      { runValidators: true, new: true }
+
+      )
+    .then((thought) =>
+    !thought
+    ? res.status(404).json({ message: 'No thought found with that ID'})
+    : res.json(thought)
 
     )
-    .then(() => res.json({ message: 'Reaction deleted!'}))
+    // .then(() => res.json({ message: 'Reaction deleted!'}))
     .catch((err) => res.status(500).json(err));
-},
+}
 };
 
