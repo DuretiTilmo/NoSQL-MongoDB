@@ -26,19 +26,8 @@ module.exports = {
       },
 
       // delete a user and associated thoughts
-    deleteUser(req, res) {
-        User.findByIdAndDelete({ _id: req.params.userId })
-        .then((user) => 
-        !user
-        ? res.status(404).json({ message: 'No user with that Id'})
-        : Thought.deleteMany({ _id: { $in: user.thoughts }})
-        )
-        .then(() => res.json({ message: 'User and associated thoughts deleted!'}))
-        .catch((err) => res.status(500).json(err));
-    },
-// delete a user by its id
 deleteUser(req, res) {
-  User.findOneAndRemove({ _id: req.params.UserId })
+  User.findOneAndRemove({ _id: req.params.userId })
   .then((user) =>
   !user
   ? res.status(404).json({ message: 'No User found with that ID'})
@@ -47,7 +36,6 @@ deleteUser(req, res) {
       { $pull: { users: req.params.userId }},
       { new: true}
       )
-
   )
   .then((thought) =>
   !thought
