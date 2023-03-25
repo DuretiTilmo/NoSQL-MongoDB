@@ -21,12 +21,16 @@ const reactionSchema = new Schema(
 
             createdAt: {
                 type: Date,
-                get: (date) => timeSince(date),
+                default: Date.now,
             }
         
     },
+    {
+        toJSON: {
+          getters: true,
+        },
+        id: false,
+      }
 );
-
-// const Reaction = model('reaction', reactionSchema);
 
 module.exports = reactionSchema;
