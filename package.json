@@ -19,6 +19,7 @@
   "homepage": "https://github.com/DuretiTilmo/NoSQL-MongoDB#readme",
   "dependencies": {
     "express.js": "^1.0.0",
-    "mongoose": "^6.9.2"
+    "mongoose": "^6.9.2",
+    "validator": "^13.9.0"
   }
 }
